@@ -152,4 +152,4 @@ let g:neocomplete#force_omni_input_patterns = {}
 let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 
 " Airline
-let g:airline_theme = 'light'
+let g:airline_theme = 'deus'

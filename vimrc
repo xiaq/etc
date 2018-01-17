@@ -124,7 +124,7 @@ set autoread
 set fileencodings=utf-8,gb18030,euc-jp,latin1
 set viminfo+=f10
 au BufNewFile,BufRead *.html se ft=htmljinja ai
-"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 set shell=/bin/sh
 
 nmap <C-S-P> :call <SID>SynStack()<CR>
@@ -135,6 +135,9 @@ function! <SID>SynStack()
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
 
 " Plugins
 " =======
@@ -147,9 +150,9 @@ call plug#end()
 
 " Completion
 set completeopt=menuone,noinsert,noselect
-let g:neocomplete#enable_at_startup = 1
+"let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#force_omni_input_patterns = {}
 let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 
 " Airline
-let g:airline_theme = 'deus'
+let g:airline_theme = 'cool'

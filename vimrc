@@ -146,7 +146,11 @@ Plug 'fatih/vim-go'
 Plug 'Shougo/neocomplete.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'mileszs/ack.vim'
 call plug#end()
+
+" Go
+let g:go_fmt_command = 'goimports'
 
 " Completion
 set completeopt=menuone,noinsert,noselect
@@ -156,3 +160,7 @@ let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 
 " Airline
 let g:airline_theme = 'cool'
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif

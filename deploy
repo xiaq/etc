@@ -1,0 +1,4 @@
+#!/bin/sh
+for f in "$@"; do
+    ln -sf `pwd`/$f ~/.$f
+done

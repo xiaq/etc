@@ -1,0 +1,33 @@
+# Prefixless bindings
+bind -n † new-window -c '#{pane_current_path}'
+bind -n ˇ new-window
+bind -n – previous-window
+bind -n ≠ next-window
+bind -n — swap-window -t:-
+bind -n ± swap-window -t:+
+bind -n ç split-window -h -c '#{pane_current_path}'
+bind -n √ split-window -v -c '#{pane_current_path}'
+bind -n ∆ select-pane -D
+bind -n ˚ select-pane -U
+bind -n ˙ select-pane -L
+bind -n ¬ select-pane -R
+bind -n Ô resize-pane -D
+bind -n  resize-pane -U
+bind -n Ó resize-pane -L
+bind -n Ò resize-pane -R
+bind -n œ confirm-before -p 'Kill pane?' kill-pane
+bind -n ® source ~/.tmux.conf \; display-message "Reloaded .tmux.conf"
+bind -n M-PageUp copy-mode -u
+bind -n M-PageDown copy-mode
+bind -n « copy-mode
+
+bind -n ¡ send-keys M-1
+bind -n ™ send-keys M-2
+bind -n £ send-keys M-3
+bind -n ¢ send-keys M-4
+bind -n ∞ send-keys M-5
+bind -n § send-keys M-6
+bind -n ¶ send-keys M-7
+bind -n • send-keys M-8
+bind -n ª send-keys M-9
+bind -n º send-keys M-0

@@ -4,7 +4,7 @@ if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
       ~/.node/bin
-      ~/Library/Python/*/bin
+      ~/Library/Python/*[nomatch-ok]/bin
       ~/.cargo/bin
       ~/bin
       $@paths

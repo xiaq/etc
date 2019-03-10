@@ -152,6 +152,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'mileszs/ack.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'leafgarland/typescript-vim'
+Plug 'sjl/tslime.vim'
 call plug#end()
 
 " Go
@@ -171,3 +172,7 @@ let g:airline_theme = 'cool'
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+
+" tslime
+let g:tslime_normal_mapping = '<C-X>'
+let g:tslime_visual_mapping = '<C-X>'

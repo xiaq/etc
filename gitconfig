@@ -1,0 +1,17 @@
+﻿[user]
+    name = Qi Xiao
+    email = xiaqqaix@gmail.com
+[color]
+    ui = auto
+[alias]
+    lg = log --graph
+    l = log --format=oneline --abbrev-commit
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+    cl = clone
+[push]
+    default = simple
+[core]
+    excludesfile = ~/.gitignore

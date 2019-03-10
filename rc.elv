@@ -1,3 +1,5 @@
+# deploy: .elvish/rc.elv
+
 if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
@@ -19,6 +21,8 @@ fn all-go {
     # vendor sources.
     put (go list -f '{{.Dir}}' ./...)/*.go
 }
+fn v [@a]{ vim $@a }
+fn vrc { vim ~/.elvish/rc.elv }
 
 # Editor configuration
 # edit:abbr['xx '] = '> /dev/null '
@@ -29,6 +33,7 @@ edit:max-height = 30
 # edit:-prompt-max-wait = 0.02
 edit:insert:binding[Alt-Left]  = $edit:insert:binding[Alt-b]
 edit:insert:binding[Alt-Right] = $edit:insert:binding[Alt-f]
+# edit:insert:binding[Alt-Up] = { cd .. }
 
 # Plugins
 #use github.com/xiaq/edit.elv/compl/go; go:apply
@@ -51,3 +56,14 @@ use re
 #    user host
 #]
 #powerline:setup
+
+# use github.com/xiaq/edit.elv/compl/git; git:apply
+
+fn loc { grep . | grep -v '^\s*#' | wc -l }
+
+fn demo {
+  edit:rprompt = (constantly (styled 'elf@host' inverse))
+  ttyshot = { edit:-dump-buf > ~/ttyshot.html }
+  edit:insert:binding[Alt-x] = $ttyshot
+  edit:history:binding[Alt-x] = $ttyshot
+}

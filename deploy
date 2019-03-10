@@ -1,4 +1,25 @@
-#!/bin/sh
-for f in "$@"; do
-    ln -sf `pwd`/$f ~/.$f
+#!/bin/sh -e
+
+for arg in "$@"; do
+    dest=.$arg
+    if test -e ~/"$dest" && ! test -L ~/"$dest"; then
+        echo 'Not replacing non-symlink ~/'$dest
+        continue
+    fi
+    if ! test -d "$arg"; then
+        # If the first line of the file starts with "# deploy: ", use the
+        # remainder as the destination relative to ~ instead.
+        line1=`head -n1 "$arg"`
+        prefix='# deploy: '
+        alt_dest=${line1#$prefix}
+        if ! test "$line1" = "$alt_dest"; then
+            dest=$alt_dest
+        fi
+    fi
+    # Remove the destination first, instead of using ln -sf. This makes sure
+    # that directory symlinks behave as expected. If ln is GNU it is also
+    # possible to use ln -sfn, but that is not portable.
+    rm -f ~/$dest
+    echo ln -s '$PWD'/"$arg" '~'/"$dest"
+    ln -s "$PWD/$arg" ~/"$dest"
 done

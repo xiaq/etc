@@ -5,8 +5,8 @@ set global ui_options ncurses_assistant=true:ncurses_enable_mouse=true
 # ========
 
 # Up and Down scrolls the view and keeps the physical position of the cursor.
-map global normal <up> kvk
-map global normal <down> jvj
+map global normal <up> vk
+map global normal <down> vj
 # I use Alt-H and Alt-L for tmux bindings.
 map global normal <c-h> <a-h>
 map global normal <c-l> <a-l>

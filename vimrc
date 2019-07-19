@@ -143,16 +143,18 @@ endif
 " =======
 call plug#begin()
 Plug 'fatih/vim-go'
-Plug 'Shougo/neocomplete.vim'
+"Plug 'Shougo/neocomplete.vim'
 "Plug 'Shougo/deoplete.nvim'
 "Plug 'roxma/nvim-yarp'
 "Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mileszs/ack.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'leafgarland/typescript-vim'
 Plug 'sjl/tslime.vim'
+Plug 'BrandonRoehl/auto-omni'
 call plug#end()
 
 " Go
@@ -164,7 +166,8 @@ set completeopt=menuone,noinsert,noselect
 "let g:neocomplete#enable_at_startup = 1
 "let g:neocomplete#force_omni_input_patterns = {}
 "let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
-let g:deoplete#enable_at_startup = 1
+"let g:deoplete#enable_at_startup = 1
+"call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 
 " Airline
 let g:airline_theme = 'cool'

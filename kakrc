@@ -1,15 +1,16 @@
+# deploy: .config/kak/kakrc
+
 set global tabstop 4
-set global ui_options ncurses_assistant=true:ncurses_enable_mouse=true
+#set global ui_options ncurses_assistant=true:ncurses_enable_mouse=true
+add-highlighter global/ wrap
+add-highlighter global/ number-lines
 
 # Mappings
 # ========
 
 # Up and Down scrolls the view and keeps the physical position of the cursor.
-map global normal <up> vk
-map global normal <down> vj
-# I use Alt-H and Alt-L for tmux bindings.
-map global normal <c-h> <a-h>
-map global normal <c-l> <a-l>
+map global normal <up> kvk
+map global normal <down> kvj
 # Use - and = to move to previous and next empty line, like { and } in Vim.
 map global normal <minus> <a-/>\n{2,}[^\n]<ret>\;
 map global normal = /\n{2,}[^\n]<ret>\;
@@ -23,4 +24,14 @@ alias global s source
 
 # Hooks
 # ====
-hook global WinSetOption filetype=go %{ go-enable-autocomplete }
+hook global WinSetOption filetype=go %{
+    go-enable-autocomplete
+    hook window BufWritePost .* %{ go-format -use-goimports }
+    # Format comments
+    map window normal <#> "|par p3 w${kak_opt_autowrap_column}<ret>"
+}
+
+hook global WinSetOption filetype=elvish %{
+	set window tabstop 2
+	set window indentwidth 2
+}

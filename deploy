@@ -20,6 +20,11 @@ for arg in "$@"; do
     # that directory symlinks behave as expected. If ln is GNU it is also
     # possible to use ln -sfn, but that is not portable.
     rm -f ~/$dest
-    echo ln -s '$PWD'/"$arg" '~'/"$dest"
+    destdir=${dest%/*}
+    if test "$dest" != "$destdir"; then
+        echo mkdir -p "~/$destdir"
+        mkdir -p ~/"$destdir"
+    fi
+    echo ln -s '$PWD'/"$arg" "~/$dest"
     ln -s "$PWD/$arg" ~/"$dest"
 done

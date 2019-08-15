@@ -14,7 +14,7 @@ if (eq $E:ELVISH_PATH "") {
 
 # Convenience functions
 fn c { clear; tmux clear }
-fn ls [@a]{ e:ls -G $@a }
+fn ls [@a]{ e:ls --color=auto $@a }
 fn sed-i [@a]{ sed -i '' -e $@a }
 fn all-go {
     # List all Go sources recursively. This uses "go list" and excludes all
@@ -27,6 +27,8 @@ fn vrc { vim ~/.elvish/rc.elv }
 # Editor configuration
 # edit:abbr['xx '] = '> /dev/null '
 # edit:location:pinned = [~ ~/go/src/github.com/elves/elvish]
+edit:abbr = [&'>!'= '> /dev/null'
+             &'||'= '| less']
 edit:max-height = 30
 # edit:location:workspaces = [&elvish=~/go/src/github.com/elves/elvish]
 
@@ -67,3 +69,9 @@ fn demo {
   edit:insert:binding[Alt-x] = $ttyshot
   edit:history:binding[Alt-x] = $ttyshot
 }
+
+E:EDITOR = kak
+
+use kak
+kak~ = $kak:kak~
+kill-kak~ = $kak:kill-kak~

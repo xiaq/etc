@@ -1,14 +1,20 @@
 # deploy: .elvish/lib/kak.elv
-fn find-session {
-  fname = .kaksession
-  for _ [(range 6)] {
-    if ?(test -f $fname) {
-      cat $fname | take 1
+
+fn find-session [dir]{
+  @parts = (splits / $dir| drop 1)
+  for i [(range (count $parts))] {
+    dir = /(joins / $parts[:(- (count $parts) $i)])
+    if ?(test -f $dir/.kakroot) {
+      joins - [(cat $dir/.kakroot)
+               (explode $parts[(- (count $parts) $i):])]
       return
     }
-    fname = ../$fname
   }
   put ''
+}
+
+fn kill [session]{
+  echo kill | e:kak -p $session
 }
 
 fn kak [@a]{
@@ -17,22 +23,20 @@ fn kak [@a]{
     return
   }
 
-  session = (find-session)
+  session = ''
+  if (eq (count $a) 0) {
+    session = (find-session $pwd)
+  } else {
+    session = (find-session (path-dir (path-abs $a[0])))
+  }
+
   if (eq $session '') {
     e:kak $@a
     return
   }
   if (not (has-value [(e:kak -l)] $session)) {
-    e:kak -d -s $session
-  }
-  e:kak -c $session $@a
-}
-
-fn kill-kak [@a]{
-  session = (find-session)
-  if (not (eq $session '')) {
-    echo kill | e:kak -p $session
+    e:kak -s $session $@a
   } else {
-    echo 'No session configured'
+    e:kak -c $session $@a
   }
 }

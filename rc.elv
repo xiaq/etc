@@ -4,6 +4,7 @@ if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
       ~/.node/bin
+      ~/.npm-packages/bin
       ~/Library/Python/*[nomatch-ok]/bin
       ~/.cargo/bin
       ~/bin
@@ -74,4 +75,3 @@ E:EDITOR = kak
 
 use kak
 kak~ = $kak:kak~
-kill-kak~ = $kak:kill-kak~

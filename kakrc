@@ -12,13 +12,15 @@ set-face global MatchingChar +r
 # Up and Down scrolls the view and keeps the physical position of the cursor.
 map global normal <up> kvk
 map global normal <down> jvj
-# Use - and = to move to previous and next empty line, like { and } in Vim.
-map global normal <minus> <a-/>\n{2,}[^\n]<ret>\;
-map global normal = /\n{2,}[^\n]<ret>\;
+# Use - and = to move to previous and next paragraph, like { and } in Vim.
+map global normal <minus> '[p;'
+map global normal = ']p;'
 # ^D to quit, like shell
 map global normal <c-d> :q<ret>
 # ^W in insert mode
 map global insert <c-w> '<left><a-;><a-B><a-;>"_d'
+map global normal Y <a-j>
+map global normal "'" :lsp-hover<ret>
 
 # Aliases and Custom Commands
 # ===========================
@@ -45,11 +47,14 @@ alias global ren lsp-rename-prompt
 # Hooks
 # ====
 
+hook global WinSetOption filetype=(go|typescript) %{
+    lsp-enable-window
+}
+
 hook global WinSetOption filetype=go %{
     hook window BufWritePost .* %{ go-format -use-goimports }
     # Format comments
     map window normal <#> "|par T4 Q+/ q ${kak_opt_autowrap_column}<ret>"
-    lsp-enable-window
 }
 
 hook global WinSetOption filetype=elvish %{

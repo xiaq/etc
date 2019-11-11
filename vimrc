@@ -143,7 +143,7 @@ endif
 " =======
 call plug#begin()
 Plug 'fatih/vim-go'
-"Plug 'Shougo/neocomplete.vim'
+Plug 'Shougo/neocomplete.vim'
 "Plug 'Shougo/deoplete.nvim'
 "Plug 'roxma/nvim-yarp'
 "Plug 'roxma/vim-hug-neovim-rpc'
@@ -154,7 +154,7 @@ Plug 'mileszs/ack.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'leafgarland/typescript-vim'
 Plug 'sjl/tslime.vim'
-Plug 'BrandonRoehl/auto-omni'
+"Plug 'BrandonRoehl/auto-omni'
 call plug#end()
 
 " Go

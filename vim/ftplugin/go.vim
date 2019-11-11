@@ -1,7 +1,7 @@
 set noet
 set tw=80
 
-" NeoCompleteEnable
+NeoCompleteEnable
 
 command! -nargs=* R GoRename <args>
 command! -nargs=* D GoDef <args>

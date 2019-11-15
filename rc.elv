@@ -4,6 +4,7 @@ if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
       ~/on/rakudo-star-*[nomatch-ok]/install/{bin,share/perl6/site/bin}
+      ~/.racket/*[nomatch-ok]/bin
       ~/.node/bin
       ~/.npm-packages/bin
       ~/Library/Python/*[nomatch-ok]/bin

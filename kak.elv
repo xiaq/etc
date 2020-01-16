@@ -6,7 +6,7 @@ fn find-session [dir]{
     dir = /(joins / $parts[:(- (count $parts) $i)])
     if ?(test -f $dir/.kakroot) {
       joins - [(cat $dir/.kakroot)
-               (explode $parts[(- (count $parts) $i):])]
+               (explode $parts[(- (count $parts) $i):])] | replaces . _ (all)
       return
     }
   }

@@ -3,6 +3,7 @@
 if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
+      ~/.opam/default/bin
       ~/on/rakudo-star-*[nomatch-ok]/install/{bin,share/perl6/site/bin}
       ~/.racket/*[nomatch-ok]/bin
       ~/.node/bin
@@ -42,7 +43,7 @@ edit:insert:binding[Alt-Right] = $edit:insert:binding[Alt-f]
 
 # Plugins
 #use github.com/xiaq/edit.elv/compl/go; go:apply
-#use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
+use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 # Imports
 use epm
@@ -77,3 +78,10 @@ E:EDITOR = kak
 
 use kak
 kak~ = $kak:kak~
+
+E:OPAM_SWITCH_PREFIX = ~/.opam/default
+E:CAML_LD_LIBRARY_PATH = ~/'.opam/default/lib/stublibs:Updated by package ocaml'
+E:OCAML_TOPLEVEL_PATH = ~/.opam/default/lib/toplevel
+E:MANPATH = :{~/home/xiaq/.opam/default/man}
+
+# echo pid $pid

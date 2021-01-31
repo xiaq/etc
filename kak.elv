@@ -1,12 +1,15 @@
 # deploy: .elvish/lib/kak.elv
 
+use str
+use path
+
 fn find-session [dir]{
-  @parts = (splits / $dir| drop 1)
+  @parts = (str:split / $dir| drop 1)
   for i [(range (count $parts))] {
-    dir = /(joins / $parts[:(- (count $parts) $i)])
+    dir = /(str:join / $parts[..(- (count $parts) $i)])
     if ?(test -f $dir/.kakroot) {
-      joins - [(cat $dir/.kakroot)
-               (explode $parts[(- (count $parts) $i):])] | replaces . _ (all)
+      str:join - [(cat $dir/.kakroot)
+               (all $parts[(- (count $parts) $i)..])] | str:replace . _ (all)
       return
     }
   }
@@ -27,7 +30,7 @@ fn kak [@a]{
   if (eq (count $a) 0) {
     session = (find-session $pwd)
   } else {
-    session = (find-session (path-dir (path-abs $a[0])))
+    session = (find-session (path:dir (path:abs $a[0])))
   }
 
   if (eq $session '') {

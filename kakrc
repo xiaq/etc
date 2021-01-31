@@ -22,6 +22,9 @@ map global insert <c-w> '<left><a-;><a-B><a-;>"_d'
 map global normal Y <a-j>
 map global normal "'" :lsp-hover<ret>
 map global normal <#> "|par T4 ${kak_opt_autowrap_column}<ret>"
+# My tmux config uses Alt-K, so use Ctrl-K instead
+map global normal <c-k> <a-k>
+map global normal <c-s-k> <a-s-k>
 
 # Aliases and Custom Commands
 # ===========================
@@ -33,17 +36,42 @@ eval %sh{kak-lsp --kakoune -s $kak_session}
 
 define-command -params 0..1 -file-completion split %{ nop %sh{
     tmux split
-    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile}" Enter
+    if test -z "$1"; then
+        first_line=`echo $kak_window_range | awk '{ print $1 + 1 }'`
+        command="exec ${first_line}gvt; select $kak_selections_desc"
+    fi
+    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile} -e '$command'" Enter
 }}
 define-command -params 0..1 -file-completion vsplit %{ nop %sh{
     tmux split -h
-    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile}" Enter
+    if test -z "$1"; then
+        first_line=`echo $kak_window_range | awk '{ print $1 + 1 }'`
+        command="exec ${first_line}gvt; select $kak_selections_desc"
+    fi
+    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile} -e '$command'" Enter
 }}
 
 alias global sp split
 alias global vsp vsplit
 
 alias global ren lsp-rename-prompt
+
+# Plugins
+# =======
+
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+
+plug "andreyorst/plug.kak" noload
+plug "chriswalker/golang.kak"
+plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
+plug "https://bitbucket.org/KJ_Duncan/kakoune-racket.kak.git"
+plug "https://gitlab.com/notramo/elvish.kak.git"
+plug "andreyorst/powerline.kak" config %{
+    powerline-start
+} defer powerline %{
+    set-option global powerline_separator ""
+    set-option global powerline_format "line_column position filetype session bufname"
+}
 
 # Hooks
 # ====
@@ -64,7 +92,7 @@ hook global WinSetOption filetype=go %{
     }
 }
 
-hook global WinSetOption filetype=elvish %{
+hook global WinSetOption filetype=(elvish|yaml|racket|typescript|html) %{
 	set window tabstop 2
 	set window indentwidth 2
 }

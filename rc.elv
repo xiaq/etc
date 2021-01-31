@@ -10,6 +10,7 @@ if (eq $E:ELVISH_PATH "") {
       ~/.npm-packages/bin
       ~/Library/Python/*[nomatch-ok]/bin
       ~/.cargo/bin
+      ~/.local/bin
       ~/bin
       $@paths
     ]
@@ -32,7 +33,8 @@ fn vrc { vim ~/.elvish/rc.elv }
 # edit:abbr['xx '] = '> /dev/null '
 # edit:location:pinned = [~ ~/go/src/github.com/elves/elvish]
 edit:abbr = [&'>!'= '> /dev/null'
-             &'||'= '| less']
+             &'||'= '| less'
+             &//ul= /usr/local]
 edit:max-height = 30
 # edit:location:workspaces = [&elvish=~/go/src/github.com/elves/elvish]
 
@@ -69,9 +71,10 @@ fn loc { grep . | grep -v '^\s*#' | wc -l }
 
 fn demo {
   edit:rprompt = (constantly (styled 'elf@host' inverse))
-  ttyshot = { edit:-dump-buf > ~/ttyshot.html }
+  ttyshot = { print (edit:-dump-buf) > ~/ttyshot.html }
   edit:insert:binding[Alt-x] = $ttyshot
   edit:history:binding[Alt-x] = $ttyshot
+  edit:completion:binding[Alt-x] = $ttyshot
 }
 
 E:EDITOR = kak
@@ -85,3 +88,5 @@ E:OCAML_TOPLEVEL_PATH = ~/.opam/default/lib/toplevel
 E:MANPATH = :{~/home/xiaq/.opam/default/man}
 
 # echo pid $pid
+use github.com/zzamboni/elvish-modules/alias
+#alias:new foo echo bar

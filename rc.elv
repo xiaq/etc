@@ -1,13 +1,17 @@
 # deploy: .elvish/rc.elv
 
+# Imports
+use epm
+use re
+use platform
+
 if (eq $E:ELVISH_PATH "") {
     E:ELVISH_PATH = 1
     paths = [
       ~/.opam/default/bin
       ~/on/rakudo-star-*[nomatch-ok]/install/{bin,share/perl6/site/bin}
       ~/.racket/*[nomatch-ok]/bin
-      ~/.node/bin
-      ~/.npm-packages/bin
+      ~/.npm-global/bin
       ~/Library/Python/*[nomatch-ok]/bin
       ~/.cargo/bin
       ~/.local/bin
@@ -19,7 +23,7 @@ if (eq $E:ELVISH_PATH "") {
 
 # Convenience functions
 fn c { clear; tmux clear }
-fn ls [@a]{ e:ls --color=auto $@a }
+fn ls [@a]{ e:ls [&darwin=-G &linux=--color=auto][$platform:os] $@a }
 fn sed-i [@a]{ sed -i '' -e $@a }
 fn all-go {
     # List all Go sources recursively. This uses "go list" and excludes all
@@ -45,11 +49,7 @@ edit:insert:binding[Alt-Right] = $edit:insert:binding[Alt-f]
 
 # Plugins
 #use github.com/xiaq/edit.elv/compl/go; go:apply
-use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
-
-# Imports
-use epm
-use re
+#use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 #use github.com/muesli/elvish-libs/theme/powerline
 #powerline:glyph[chain] = ' '
@@ -88,5 +88,5 @@ E:OCAML_TOPLEVEL_PATH = ~/.opam/default/lib/toplevel
 E:MANPATH = :{~/home/xiaq/.opam/default/man}
 
 # echo pid $pid
-use github.com/zzamboni/elvish-modules/alias
+#use github.com/zzamboni/elvish-modules/alias
 #alias:new foo echo bar

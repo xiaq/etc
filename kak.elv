@@ -27,7 +27,7 @@ fn kak [@a]{
   }
 
   session = ''
-  if (eq (count $a) 0) {
+  if (== (count $a) 0) {
     session = (find-session $pwd)
   } else {
     session = (find-session (path:dir (path:abs $a[0])))

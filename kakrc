@@ -1,5 +1,31 @@
 # deploy: .config/kak/kakrc
 
+# Plugins
+# =======
+
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+
+plug "andreyorst/plug.kak" noload
+#plug "chriswalker/golang.kak"
+plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
+plug "https://bitbucket.org/KJ_Duncan/kakoune-racket.kak.git"
+#plug "https://gitlab.com/notramo/elvish.kak.git"
+plug "andreyorst/powerline.kak" config %{
+    powerline-start
+} defer powerline %{
+    set-option global powerline_separator ""
+    set-option global powerline_format "line_column position filetype session bufname"
+}
+plug "kak-lsp/kak-lsp" do %{
+    cargo install --locked --force --path .
+} config %{
+    #eval %sh{kak-lsp --kakoune -s $kak_session}
+    #set global lsp_cmd "kak-lsp -s %val{session} -vvv --log /tmp/kak-lsp.log"
+    alias global ren lsp-rename-prompt
+}
+
+# Basic settings
+# ==============
 set global tabstop 4
 add-highlighter global/ wrap
 add-highlighter global/ number-lines
@@ -31,9 +57,6 @@ map global normal <c-s-k> <a-s-k>
 alias global h doc
 alias global s source
 
-eval %sh{kak-lsp --kakoune -s $kak_session}
-#set global lsp_cmd "kak-lsp -s %val{session} -vvv --log /tmp/kak-lsp.log"
-
 define-command -params 0..1 -file-completion split %{ nop %sh{
     tmux split
     if test -z "$1"; then
@@ -54,24 +77,11 @@ define-command -params 0..1 -file-completion vsplit %{ nop %sh{
 alias global sp split
 alias global vsp vsplit
 
-alias global ren lsp-rename-prompt
-
-# Plugins
-# =======
-
-source "%val{config}/plugins/plug.kak/rc/plug.kak"
-
-plug "andreyorst/plug.kak" noload
-plug "chriswalker/golang.kak"
-plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
-plug "https://bitbucket.org/KJ_Duncan/kakoune-racket.kak.git"
-plug "https://gitlab.com/notramo/elvish.kak.git"
-plug "andreyorst/powerline.kak" config %{
-    powerline-start
-} defer powerline %{
-    set-option global powerline_separator ""
-    set-option global powerline_format "line_column position filetype session bufname"
+define-command paste-transcript %{
+    execute-keys %{!tmux show-buffer | sed 's|^|// |'} <ret>
 }
+
+alias global pt paste-transcript
 
 # Hooks
 # ====
@@ -81,7 +91,10 @@ hook global WinSetOption filetype=(go|typescript|c|cpp|ocaml) %{
 }
 
 hook global WinSetOption filetype=go %{
-    hook window BufWritePost .* %{ go-format -use-goimports }
+    hook window BufWritePost .* %{
+        nop %sh{ goimports -w $kak_buffile }
+        edit!
+    }
     # Override the key to format comments.
     map window normal <#> "|par T4 Q+/ q ${kak_opt_autowrap_column}<ret>"
     define-command gorename %{
@@ -157,7 +170,6 @@ hook global InsertCompletionHide .* %{
     unmap window insert <up>
 }
 
-#
 declare-option -hidden range-specs show_matching_range
 
 hook global -group kakrc-matching-ranges InsertChar '[[\](){}<>]' %{

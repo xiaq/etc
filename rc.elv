@@ -90,3 +90,12 @@ E:MANPATH = :{~/home/xiaq/.opam/default/man}
 # echo pid $pid
 #use github.com/zzamboni/elvish-modules/alias
 #alias:new foo echo bar
+
+# Synchronize $pwd of other panes
+fn spwd {
+  tmux list-panes -F '#{pane_id}' | each [id]{
+    if (not-eq $id $E:TMUX_PANE) {
+      tmux send-keys -t $id ':cd '$pwd Enter
+    }
+  }
+}

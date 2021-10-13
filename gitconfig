@@ -17,3 +17,7 @@
     excludesfile = ~/.gitignore
 [pull]
 	ff = only
+[stash]
+	showPatch = true
+[init]
+	defaultBranch = main

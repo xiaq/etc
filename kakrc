@@ -4,23 +4,21 @@
 # =======
 
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
+source "%val{config}/rep.kak"
 
 plug "andreyorst/plug.kak" noload
 #plug "chriswalker/golang.kak"
 plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
 plug "https://bitbucket.org/KJ_Duncan/kakoune-racket.kak.git"
-#plug "https://gitlab.com/notramo/elvish.kak.git"
 plug "andreyorst/powerline.kak" config %{
     powerline-start
 } defer powerline %{
-    set-option global powerline_separator ""
-    set-option global powerline_format "line_column position filetype session bufname"
+    powerline-separator global none
+    powerline-format global "line_column position filetype session bufname"
 }
 plug "kak-lsp/kak-lsp" do %{
     cargo install --locked --force --path .
 } config %{
-    #eval %sh{kak-lsp --kakoune -s $kak_session}
-    #set global lsp_cmd "kak-lsp -s %val{session} -vvv --log /tmp/kak-lsp.log"
     alias global ren lsp-rename-prompt
 }
 
@@ -52,36 +50,32 @@ map global normal <#> "|par T4 ${kak_opt_autowrap_column}<ret>"
 map global normal <c-k> <a-k>
 map global normal <c-s-k> <a-s-k>
 
+hook global InsertCompletionShow .* %{
+    map window insert <tab> <c-n>
+    map window insert <down> <c-n>
+    map window insert <up> <c-p>
+}
+hook global InsertCompletionHide .* %{
+    unmap window insert <tab>
+    unmap window insert <down>
+    unmap window insert <up>
+}
+
 # Aliases and Custom Commands
 # ===========================
 alias global h doc
 alias global s source
 
-define-command -params 0..1 -file-completion split %{ nop %sh{
-    tmux split
-    if test -z "$1"; then
-        first_line=`echo $kak_window_range | awk '{ print $1 + 1 }'`
-        command="exec ${first_line}gvt; select $kak_selections_desc"
-    fi
-    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile} -e '$command'" Enter
+define-command -params 1..2 -hidden split-inner %{ nop %sh{
+    first_line=`echo $kak_window_range | awk '{ print $1 + 1 }'`
+    command="exec ${first_line}gvt; select $kak_selections_desc"
+    echo "$1 kak -c $kak_session ${2:-$kak_buffile} -e '$command'" > ~/tmp/iterm2
 }}
-define-command -params 0..1 -file-completion vsplit %{ nop %sh{
-    tmux split -h
-    if test -z "$1"; then
-        first_line=`echo $kak_window_range | awk '{ print $1 + 1 }'`
-        command="exec ${first_line}gvt; select $kak_selections_desc"
-    fi
-    tmux send-keys "kak -c $kak_session ${1:-$kak_buffile} -e '$command'" Enter
-}}
+define-command -params 0..1 -file-completion split %{ split-inner h %arg{@} }
+define-command -params 0..1 -file-completion vsplit %{ split-inner v %arg{@} }
 
 alias global sp split
 alias global vsp vsplit
-
-define-command paste-transcript %{
-    execute-keys %{!tmux show-buffer | sed 's|^|// |'} <ret>
-}
-
-alias global pt paste-transcript
 
 # Hooks
 # ====
@@ -95,14 +89,8 @@ hook global WinSetOption filetype=go %{
         nop %sh{ goimports -w $kak_buffile }
         edit!
     }
-    # Override the key to format comments.
+    # Override the # key to format comments.
     map window normal <#> "|par T4 Q+/ q ${kak_opt_autowrap_column}<ret>"
-    define-command gorename %{
-        prompt "new name:" %{ nop %sh{
-            gorename -offset "$kak_buffile:#$kak_cursor_byte_offset" -to "$kak_text"
-            notify-send 'gorename done' || true
-        } }
-    }
 }
 
 hook global WinSetOption filetype=(elvish|yaml|racket|typescript|html) %{
@@ -111,8 +99,8 @@ hook global WinSetOption filetype=(elvish|yaml|racket|typescript|html) %{
 }
 
 hook global WinSetOption filetype=markdown %{
-    # Override the key.
-    map window normal <#> "|prettier --stdin --parser markdown --tab-width 4 --prose-wrap always<ret>"
+    # Override the # key to pipe through prettier.
+    map window normal <#> "|prettier --stdin --parser markdown<ret>"
 
     hook window InsertKey <tab> %{ execute-keys -draft h@ }
     autowrap-enable
@@ -159,16 +147,6 @@ hook global WinSetOption filetype=markdown %{
     } }
 }
 
-hook global InsertCompletionShow .* %{
-    map window insert <tab> <c-n>
-    map window insert <down> <c-n>
-    map window insert <up> <c-p>
-}
-hook global InsertCompletionHide .* %{
-    unmap window insert <tab>
-    unmap window insert <down>
-    unmap window insert <up>
-}
 
 declare-option -hidden range-specs show_matching_range
 

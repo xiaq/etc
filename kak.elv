@@ -3,10 +3,10 @@
 use str
 use path
 
-fn find-session [dir]{
-  @parts = (str:split / $dir| drop 1)
+fn find-session {|dir|
+  var @parts = (str:split / $dir| drop 1)
   for i [(range (count $parts))] {
-    dir = /(str:join / $parts[..(- (count $parts) $i)])
+    set dir = /(str:join / $parts[..(- (count $parts) $i)])
     if ?(test -f $dir/.kakroot) {
       str:join - [(cat $dir/.kakroot)
                (all $parts[(- (count $parts) $i)..])] | str:replace . _ (all)
@@ -16,21 +16,21 @@ fn find-session [dir]{
   put ''
 }
 
-fn kill [session]{
+fn kill {|session|
   echo kill | e:kak -p $session
 }
 
-fn kak [@a]{
+fn kak {|@a|
   if (and (>= (count $a) 1) (has-value [-c -s -d -p -l] $a[0])) {
     e:kak $@a
     return
   }
 
-  session = ''
+  var session = ''
   if (== (count $a) 0) {
-    session = (find-session $pwd)
+    set session = (find-session $pwd)
   } else {
-    session = (find-session (path:dir (path:abs $a[0])))
+    set session = (find-session (path:dir (path:abs $a[0])))
   }
 
   if (eq $session '') {

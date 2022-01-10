@@ -16,6 +16,10 @@ if (eq $E:ELVISH_PATH "") {
       ~/.cargo/bin
       ~/.local/bin
       ~/bin
+      ~/go/bin
+      /opt/homebrew/bin
+      /opt/homebrew/sbin
+      /opt/homebrew/opt/ruby/bin
       $@paths
     ]
       # ~/on/*[nomatch-ok]/bin
@@ -72,10 +76,9 @@ fn loc { grep . | grep -v '^\s*#' | wc -l }
 
 fn demo {
   set edit:rprompt = (constantly (styled 'elf@host' inverse))
-  var ttyshot = { print (edit:-dump-buf) > ~/ttyshot.html }
-  set edit:insert:binding[Alt-x] = $ttyshot
-  set edit:history:binding[Alt-x] = $ttyshot
-  set edit:completion:binding[Alt-x] = $ttyshot
+  var header = '<!-- Follow website/ttyshot/README.md to regenerate -->'
+  var ttyshot = { print $header(edit:-dump-buf) > ~/ttyshot.html }
+  set edit:global-binding[Alt-x] = $ttyshot
 }
 
 set E:EDITOR = kak
@@ -100,3 +103,8 @@ fn spwd {
     }
   }
 }
+
+set E:LSCOLORS = Gxfxcxdxbxegedabagacad
+
+use github.com/zzamboni/elvish-modules/iterm2
+iterm2:init
